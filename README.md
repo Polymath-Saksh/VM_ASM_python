@@ -18,7 +18,7 @@ python translator.py /path/test.vm
 python translator.py "A:/User/...../test.vm"
 ```
 
-The translated ASM code will be saved in a file with the same name as the input file, but with a `.asm` extension.
+The translated ASM code will be saved in a file with the name '`output.asm`' in the root directory of this translator.
 
 ## License
 

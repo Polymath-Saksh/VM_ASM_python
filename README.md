@@ -20,13 +20,12 @@ python translator.py "A:/User/...../test.vm"
 
 The translated ASM code will be saved in a file with the same name as the input file, but with a `.asm` extension.
 
-## Limitations
+## License
 
-Currently, this translator supports the following commands:
-- Push and Pop commands
-- Arithmetic commands: `add`, `sub`, `neg`, `eq`, `gt`, `lt`, `and`, `or`, `not`
-- Branching commands: `label`, `goto`, `if-goto`
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Functionality for Function commands (`function`, `call`) will be added in future commits.
+## Author
 
-Please note that the translator may have other limitations or constraints not mentioned here.
+Written by Saksham Kumar (polymath_saksh)
+
+© 2023 Saksham Kumar

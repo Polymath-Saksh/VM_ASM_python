@@ -40,11 +40,12 @@ Support to multi-file translations (for project).
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Software Copyright
+
+NAND2Tetris course offered by Shimon Schoken and Noam Nissan 
+© 2017 Shimon Schocken and Noam Nisan
+
 ## Author
 
 Written by Saksham Kumar (polymath_saksh)
-
-NAND2Tetris course offered by Shimon Schoken and Noam Nissan 
-(© 2017 Shimon Schocken and Noam Nisan)
-
 © 2023 Saksham Kumar

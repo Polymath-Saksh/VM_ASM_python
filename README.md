@@ -1,6 +1,10 @@
 # VM_ASM_python
 
-A Virtual Machine to ASM translator in Python Language.
+A Virtual Machine to ASM translator in © NAND2Tetris Course in Python Language.
+
+Translator made under Project 7 & 8: Virtual Machine Implementation.
+Course reference available at www.nand2tetris.org
+
 
 ## Usage
 
@@ -28,6 +32,10 @@ Functionality for Function commands (`function`, `call`) will be added in future
 
 The translated ASM code will be saved in a file with the name '`output.asm`' in the root directory of this translator.
 
+## Future Additions
+
+Support to multi-file translations (for project).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -35,5 +43,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Author
 
 Written by Saksham Kumar (polymath_saksh)
+
+NAND2Tetris course offered by Shimon Schoken and Noam Nissan 
+(© 2017 Shimon Schocken and Noam Nisan)
 
 © 2023 Saksham Kumar

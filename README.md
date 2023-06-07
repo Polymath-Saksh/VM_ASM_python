@@ -17,6 +17,14 @@ python translator.py test.vm
 python translator.py /path/test.vm
 python translator.py "A:/User/...../test.vm"
 ```
+## Limitations
+
+Currently, this translator supports the following commands:
+- Push and Pop commands
+- Arithmetic commands: `add`, `sub`, `neg`, `eq`, `gt`, `lt`, `and`, `or`, `not`
+- Branching commands: `label`, `goto`, `if-goto`
+
+Functionality for Function commands (`function`, `call`) will be added in future commits.
 
 The translated ASM code will be saved in a file with the name '`output.asm`' in the root directory of this translator.
 

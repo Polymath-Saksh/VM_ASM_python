@@ -3,7 +3,6 @@ import sys
 input_file = sys.argv[1]
 
 class VMTranslator:
-    
 
     def __init__(self):#Constructor
         self.asm_code = []  
@@ -14,6 +13,7 @@ class VMTranslator:
     def translate(self, vm_code):
         ARITHMETIC_COMMANDS=['add','sub','neg','eq','gt','lt','and','or','not']
         BRANCHING_COMMANDS=['label','goto','if-goto']
+        FUNCTION_COMMANDS=['function','call','return']
         lines = vm_code.split('\n') #Splitting lines
         for line in lines: #Traversing lines
             line = line.strip() #Remove leading and trailing spaces
@@ -35,7 +35,11 @@ class VMTranslator:
                     self.translate_arithmetic(command)
                 elif command in BRANCHING_COMMANDS:
                     self.translate_branching(command, tokens[1])
-    
+                elif command in FUNCTION_COMMANDS:
+                    fname=tokens[1]
+                    args=tokens[2]
+                    self.translate_functions(command, fname, args)
+
     def translate_push(self, segment, index):
         if segment == 'constant':
             self.asm_code.append(f'@{index}')
@@ -52,6 +56,7 @@ class VMTranslator:
                 self.asm_code.append('D=M')
 
         self.push_d_to_stack()
+
 
     def translate_pop(self, segment, index):
         segment_pointer = self.get_segment_pointer(segment, index)
@@ -163,6 +168,99 @@ class VMTranslator:
             self.pop_stack_to_d()
             self.asm_code.append(f'@({label})')
             self.asm_code.append('D;JNE')
+
+    def translate_functions(self, command, fname, args):
+        if command == 'function':
+            self.current_function = fname
+            self.asm_code.append(f'({fname})')
+            self.asm_code.append('@SP')
+            self.asm_code.append('A=M')
+            for _ in range(int(args)):
+                self.asm_code.append('M=0')
+                self.asm_code.append('A=A+1')
+            self.asm_code.append('D=A')
+            self.asm_code.append('@SP')
+            self.asm_code.append('M=D')
+        
+        elif command == 'call':
+            return_address = f'{self.current_function}$ret.{self.jump_count}'
+            self.jump_count += 1
+            
+            # Push return address
+            self.asm_code.append(f'@{return_address}')
+            self.asm_code.append('D=A')
+            self.push_d_to_stack()
+            
+            # Push LCL, ARG, THIS, THAT
+            for segment in ['LCL', 'ARG', 'THIS', 'THAT']:
+                self.asm_code.append(f'@{segment}')
+                self.asm_code.append('D=M')
+                self.push_d_to_stack()
+            
+            # Set ARG = SP - args - 5
+            self.asm_code.append('@SP')
+            self.asm_code.append('D=M')
+            self.asm_code.append(f'@{args}')
+            self.asm_code.append('D=D-A')
+            self.asm_code.append('@5')
+            self.asm_code.append('D=D-A')
+            self.asm_code.append('@ARG')
+            self.asm_code.append('M=D')
+            
+            # Set LCL = SP
+            self.asm_code.append('@SP')
+            self.asm_code.append('D=M')
+            self.asm_code.append('@LCL')
+            self.asm_code.append('M=D')
+            
+            # Goto function
+            self.asm_code.append(f'@{fname}')
+            self.asm_code.append('0;JMP')
+            
+            # Define return label
+            self.asm_code.append(f'({return_address})')
+
+        elif command == 'return':
+            # Set FRAME = LCL
+            self.asm_code.append('@LCL')
+            self.asm_code.append('D=M')
+            self.asm_code.append('@R13')
+            self.asm_code.append('M=D')
+            
+            # Set RET = *(FRAME-5)
+            self.asm_code.append('@5')
+            self.asm_code.append('A=D-A')
+            self.asm_code.append('D=M')
+            self.asm_code.append('@R14')
+            self.asm_code.append('M=D')
+            
+            # *ARG = pop()
+            self.pop_stack_to_d()
+            self.asm_code.append('@ARG')
+            self.asm_code.append('A=M')
+            self.asm_code.append('M=D')
+            
+            # SP = ARG + 1
+            self.asm_code.append('@ARG')
+            self.asm_code.append('D=M+1')
+            self.asm_code.append('@SP')
+            self.asm_code.append('M=D')
+            
+            # Restore THAT, THIS, ARG, LCL
+            for segment, offset in zip(['THAT', 'THIS', 'ARG', 'LCL'], ['1', '2', '3', '4']):
+                self.asm_code.append('@R13')
+                self.asm_code.append('D=M')
+                self.asm_code.append(f'@{offset}')
+                self.asm_code.append('A=D-A')
+                self.asm_code.append('D=M')
+                self.asm_code.append(f'@{segment}')
+                self.asm_code.append('M=D')
+            
+            # Goto RET
+            self.asm_code.append('@R14')
+            self.asm_code.append('A=M')
+            self.asm_code.append('0;JMP')
+
 
     def get_asm_code(self):
         return '\n'.join(self.asm_code)

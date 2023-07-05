@@ -27,8 +27,7 @@ Currently, this translator supports the following commands:
 - Push and Pop commands
 - Arithmetic commands: `add`, `sub`, `neg`, `eq`, `gt`, `lt`, `and`, `or`, `not`
 - Branching commands: `label`, `goto`, `if-goto`
-
-Functionality for Function commands (`function`, `call`) will be added in future commits.
+- Function Control commands; `function`, `call`, `return`
 
 The translated ASM code will be saved in a file with the name '`output.asm`' in the root directory of this translator.
 
